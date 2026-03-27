@@ -1,0 +1,119 @@
+public class MagicSquare
+{
+    private int[][] data;
+    private int rowSum;
+
+    public MagicSquare(int[][] d)
+    {
+        data = new int[d.length][d[0].length];
+
+        for (int r = 0; r < d.length; r++)
+        {
+            for (int c = 0; c < d[0].length; c++)
+            {
+                data[r][c] = d[r][c];
+            }
+        }
+
+        rowSum = rowSum(data[0]);
+    }
+
+    public boolean isUnique()
+    {
+        int max = data.length * data[0].length;
+        boolean[] seen = new boolean[max + 1];
+
+        for (int r = 0; r < data.length; r++)
+        {
+            for (int c = 0; c < data[0].length; c++)
+            {
+                int val = data[r][c];
+
+                if (val < 1 || val > max || seen[val])
+                    return false;
+
+                seen[val] = true;
+            }
+        }
+        return true;
+    }
+
+    public boolean isMagic()
+    {
+        return rowSumsEqual() &&
+               columnSumsEqual() &&
+               diagonalSumsEqual() &&
+               isUnique();
+    }
+
+    public boolean rowSumsEqual()
+    {
+        for (int r = 0; r < data.length; r++)
+        {
+            if (rowSum(data[r]) != rowSum)
+                return false;
+        }
+        return true;
+    }
+
+    private int rowSum(int[] row)
+    {
+        int sum = 0;
+        for (int val : row)
+            sum += val;
+        return sum;
+    }
+
+    public boolean columnSumsEqual()
+    {
+        for (int c = 0; c < data[0].length; c++)
+        {
+            if (colSum(c) != rowSum)
+                return false;
+        }
+        return true;
+    }
+
+    private int colSum(int colNum)
+    {
+        int sum = 0;
+        for (int r = 0; r < data.length; r++)
+            sum += data[r][colNum];
+        return sum;
+    }
+
+    public boolean diagonalSumsEqual()
+    {
+        int diag1 = 0;
+        int diag2 = 0;
+
+        for (int i = 0; i < data.length; i++)
+        {
+            diag1 += data[i][i];
+            diag2 += data[i][data.length - 1 - i];
+        }
+
+        return diag1 == rowSum && diag2 == rowSum;
+    }
+
+    public String toString()
+    {
+        String result = "";
+
+        for (int r = 0; r < data.length; r++)
+        {
+            for (int c = 0; c < data[0].length; c++)
+            {
+                result += data[r][c] + " ";
+            }
+            result += "\n";
+        }
+
+        if (isMagic())
+            result += "MAGIC SQUARE";
+        else
+            result += "NOT A MAGIC SQUARE";
+
+        return result;
+    }
+}
